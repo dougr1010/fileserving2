@@ -115,6 +115,7 @@ $(function(){
                 //console.log("imgLoc: ", $imgLoc);
                 //$(".results").append("<img class='pic' id='Picture" + ii + "' data-id='" + ii + "'style='width:300px' src=" + data + ">");//<br />
                 console.log("thing", thing.attr("data-location"));
+                thing.attr("data-id", ii);
                 thing.attr("src", data);
                 //$(".results").append("<img class='pic' id='Picture" + ii + "' data-id='" + ii + "'style='width:300px' src=" + data + ">");//<br />
                 //$(".results").append/prepend seems the only thing that works
