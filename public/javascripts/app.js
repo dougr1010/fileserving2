@@ -9,7 +9,7 @@ $(function(){
     var pictureArray = [];
 
 
-    var getImage = function (i) {
+    var getImage = function (i, location) {
         $.ajax({
             type: 'GET',
             dataType: 'json',
@@ -19,7 +19,7 @@ $(function(){
                 console.log('AJAX complete');
                 console.log(data);
                 //$(".results").append("<img class='pic' id='Picture" + i + "' data-id='" + i + "'style='width:300px' src=" + data + "><br />");
-                $(".results").append("<img class='pic' id='Picture" + i + "' data-id='" + i + "'style='width:300px' src=" + data + ">");
+                $(".results").append("<img class='pic' data-location='" + location + "' data-id='" + i + "'style='width:300px' src=" + data + ">");
             },
             error: function(request, errorType, errorMessage){
                 //alert(errorType + errorMessage);
@@ -35,7 +35,7 @@ $(function(){
         shuffle(pictureArray);
         while (i < 5) {
             // getImage(i);
-            getImage(pictureArray[i]);
+            getImage(pictureArray[i], i);
             //console.log(pictureArray[i]);
             i++;
             availableImageNumber = pictureArray[5];
@@ -96,26 +96,35 @@ $(function(){
         currentImage = parseInt(($(this).attr('data-id')));
         console.log('current image: ', currentImage);
         console.log('calling for image index: ',availableImageNumber);
+        console.log("data-location : " + $(this).attr("data-location"));
+        var thing = $(this);
+
         //getImage(availableImageNumber);
         //var getImage = function (i) {
-        var ii = availableImageNumber
-            $.ajax({
-                type: 'GET',
-                dataType: 'json',
-                url: '/' + ii,
-                complete: function(){
-                },success: function(data){
-                    console.log('AJAX complete');
-                    console.log(data);
-                    $(".results").append("<img class='pic' id='Picture" + ii + "' data-id='" + ii + "'style='width:300px' src=" + data + ">");//<br />
-                    //$(".results").append/prepend seems the only thing that works
-                },
-                error: function(request, errorType, errorMessage){
-                    //alert(errorType + errorMessage);
-                }
-            });
+        var ii = availableImageNumber;
+        $.ajax({
+            type: 'GET',
+            dataType: 'json',
+            url: '/' + ii,
+            complete: function(){
+            },success: function(data){
+                //console.log('AJAX complete');
+                //console.log(data);
+                //var $imgLoc = $('[data-location=' + $(this).attr("data-location"));
+                //console.log("data-location : " + $(this).attr("data-location"));
+                //console.log("imgLoc: ", $imgLoc);
+                //$(".results").append("<img class='pic' id='Picture" + ii + "' data-id='" + ii + "'style='width:300px' src=" + data + ">");//<br />
+                console.log("thing", thing.attr("data-location"));
+                thing.attr("src", data);
+                //$(".results").append("<img class='pic' id='Picture" + ii + "' data-id='" + ii + "'style='width:300px' src=" + data + ">");//<br />
+                //$(".results").append/prepend seems the only thing that works
+            },
+            error: function(request, errorType, errorMessage){
+                //alert(errorType + errorMessage);
+            }
+        });
         console.log($(this));
-        $(this).remove();
+        //$(this).remove();
         availableImageNumber = currentImage;
 
 
