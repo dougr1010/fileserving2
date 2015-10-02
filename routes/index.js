@@ -7,20 +7,21 @@ var jsonquery = require('json-query');
 
 var fileLocation = path.join(__dirname, '../model/data.json');
 
-console.log(fileLocation);
-
+console.log("fileLocation: ",fileLocation);
+console.log("__dirname: : ", __dirname);
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
     res.sendFile(path.join(__dirname, "../views/index.html"))
 });
 
-router.get('/:id', function(req, res, next){
+router.get('/:id?', function(req, res, next){
         var id = req.params.id;
+        console.log("router get id: ", id);
 
         if (id != "favicon.ico") {
 
-        //console.log(fileLocation);
+
 
         fs.readFile(fileLocation, function (err, data) {
 
@@ -52,7 +53,7 @@ router.get('/:id', function(req, res, next){
 
 function getJsonQueryString(key, value){
     var queryString = '[' + key + '=' + value + ']';
-    console.log('Generate query string: ' + queryString);
+    //console.log('Generate query string: ' + queryString);
     return queryString;
 }
 
