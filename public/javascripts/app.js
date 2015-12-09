@@ -2,12 +2,18 @@ $(function(){
 
 
 
-    console.log("hello from client");
+    console.log("hello Epsilon");
     var $results = $(".results");
 
     var availableImageNumber = 0;
     var pictureArray = [];
 
+
+    //////////////////////////////////////////////////////////////////////
+    //Pass the image number to an ajax read of the image location file, //
+    //and receive back the path to the image. Append the image onto the //
+    //DOM's "results" class div.                                        //
+    //////////////////////////////////////////////////////////////////////
 
     var getImage = function (i, location) {
         $.ajax({
@@ -18,15 +24,17 @@ $(function(){
             },success: function(data){
                 console.log('AJAX complete');
                 console.log(data);
-                //$(".results").append("<img class='pic' id='Picture" + i + "' data-id='" + i + "'style='width:300px' src=" + data + "><br />");
                 $(".results").append("<img class='pic' data-location='" + location + "' data-id='" + i + "'style='width:300px' src=" + data + ">");
             },
             error: function(request, errorType, errorMessage){
-                //alert(errorType + errorMessage);
+                console.log(errorType + errorMessage);
             }
         })};
 
-
+    //////////////////////////////////////////////////////////////////
+    // Create an array of image numbers, shuffle those numbers,     //
+    // then loop over the first 5 calling getImage to display them. //
+    //////////////////////////////////////////////////////////////////
 
     var showPictures = function() {
         var pictureArray = [0, 1, 2, 3, 4, 5];
@@ -34,17 +42,17 @@ $(function(){
 
         shuffle(pictureArray);
         while (i < 5) {
-            // getImage(i);
             getImage(pictureArray[i], i);
-            //console.log(pictureArray[i]);
             i++;
             availableImageNumber = pictureArray[5];
             console.log("availableImageNumber: ",availableImageNumber);
         }
-    }
+    };
 
 
-
+    ///////////////////////////////////////////////////////////
+    // Shuffle the elements of an array and return the array //
+    ///////////////////////////////////////////////////////////
 
     function shuffle(array) {
         var currentIndex = array.length, temporaryValue, randomIndex ;
@@ -63,73 +71,54 @@ $(function(){
         return array;
     }
 
+
     //----------------------------------------------------------------------------
 
-    //Display initial 5 pictures
+
+    ///////////////////////////////////////////////////////
+    // On start  up, display initial 5 of the 6 pictures //
+    ///////////////////////////////////////////////////////
+
     showPictures();
 
 
-    //click the shuffle pictures button
-    ///////////////////////////////////
+    ///////////////////////////////////////////////////
+    // When Shuffle Pictures button is clicked,      //
+    // clear the DOM's appended images, shuffle      //
+    // the array and display the the first 5 images. //
+    ///////////////////////////////////////////////////
+
     $('#shufflePictures').on('click', function() {
-        console.log("saw a shuffle click")
+        console.log("saw a shuffle click");
         $(".results").empty();
         showPictures();
     });
 
+    //////////////////////////////////////////////////////
+    // Click image to get new image.                    //
+    // Replace image data and src with those for the    //
+    // image on the bench, then update the bench image. //
+    //////////////////////////////////////////////////////
 
-    //click new image button
-    ////////////////////////
-    $(document).on("click", ".pic", function() {     //document ".pic" works
-
-        //this almost works but appends the new pic to the end of the list
-        //console.log("Saw a replace click");
-        //currentImage = parseInt(($(this).attr('data-id')));
-        //console.log('current image: ', currentImage);
-        //$(this).remove();
-        //console.log('calling for image index: ',availableImageNumber);
-        //getImage(availableImageNumber);
-        //availableImageNumber = currentImage;
-
-        //try prepending, then deleting $this
+    $(document).on("click", ".pic", function() {
         console.log("Saw a replace click");
         currentImage = parseInt(($(this).attr('data-id')));
-        console.log('current image: ', currentImage);
-        console.log('calling for image index: ',availableImageNumber);
-        console.log("data-location : " + $(this).attr("data-location"));
-        var thing = $(this);
-
-        //getImage(availableImageNumber);
-        //var getImage = function (i) {
-        var ii = availableImageNumber;
+        var thing = $(this);  //thing = image to be replaced
+        var ii = availableImageNumber; // is the image to replace it
         $.ajax({
             type: 'GET',
             dataType: 'json',
             url: '/' + ii,
             complete: function(){
             },success: function(data){
-                //console.log('AJAX complete');
-                //console.log(data);
-                //var $imgLoc = $('[data-location=' + $(this).attr("data-location"));
-                //console.log("data-location : " + $(this).attr("data-location"));
-                //console.log("imgLoc: ", $imgLoc);
-                //$(".results").append("<img class='pic' id='Picture" + ii + "' data-id='" + ii + "'style='width:300px' src=" + data + ">");//<br />
-                console.log("thing", thing.attr("data-location"));
-                thing.attr("data-id", ii);
-                thing.attr("src", data);
-                //$(".results").append("<img class='pic' id='Picture" + ii + "' data-id='" + ii + "'style='width:300px' src=" + data + ">");//<br />
-                //$(".results").append/prepend seems the only thing that works
+                thing.attr("data-id", ii);  //replace the image's data
+                thing.attr("src", data);    //replace the src with the src to the new image
             },
             error: function(request, errorType, errorMessage){
-                //alert(errorType + errorMessage);
+                console.log(errorType + errorMessage);
             }
         });
-        console.log($(this));
-        //$(this).remove();
         availableImageNumber = currentImage;
-
-
     });
-
 
 });
